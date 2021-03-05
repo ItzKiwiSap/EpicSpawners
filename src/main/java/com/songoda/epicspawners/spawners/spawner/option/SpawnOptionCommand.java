@@ -50,7 +50,6 @@ public class SpawnOptionCommand implements SpawnOption {
                     int searchIndex = 0;
                     while (searchIndex++ <= MAX_SEARCH_COUNT) {
                         spawner.setSpawnCount(spawner.getSpawnCount() + 1);
-                        EpicSpawners.getInstance().getDataManager().updateSpawner(spawner);
                         double xOffset = random.nextInt((SPAWN_RADIUS * 2) + 1) - SPAWN_RADIUS;
                         double yOffset = random.nextInt((SPAWN_RADIUS * 2) + 1) - SPAWN_RADIUS;
                         double zOffset = random.nextInt((SPAWN_RADIUS * 2) + 1) - SPAWN_RADIUS;
@@ -61,6 +60,8 @@ public class SpawnOptionCommand implements SpawnOption {
                                 .replaceAll("@[zZ]", String.valueOf(location.getZ()));
                         location.subtract(xOffset, yOffset, zOffset);
                     }
+
+                    EpicSpawners.getInstance().getDataManager().updateSpawnerAsync(spawner);
                 }
 
                 // Add the world name if @w present in command

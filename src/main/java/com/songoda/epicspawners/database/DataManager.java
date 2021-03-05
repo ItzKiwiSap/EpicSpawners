@@ -34,7 +34,7 @@ public class DataManager extends DataManagerAbstract {
         super(databaseConnector, plugin);
     }
 
-    public void updateSpawner(PlacedSpawner spawner) {
+    public void updateSpawnerAsync(PlacedSpawner spawner) {
         this.async(() -> this.databaseConnector.connect(connection -> {
             String updateSpawner = "UPDATE " + this.getTablePrefix() + "placed_spawners SET spawn_count = ?, placed_by = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(updateSpawner)) {
@@ -45,6 +45,19 @@ public class DataManager extends DataManagerAbstract {
                 statement.executeUpdate();
             }
         }));
+    }
+
+    public void updateSpawnerSync(PlacedSpawner spawner) {
+        this.databaseConnector.connect(connection -> {
+            String updateSpawner = "UPDATE " + this.getTablePrefix() + "placed_spawners SET spawn_count = ?, placed_by = ? WHERE id = ?";
+            try (PreparedStatement statement = connection.prepareStatement(updateSpawner)) {
+                statement.setInt(1, spawner.getSpawnCount());
+                statement.setString(2,
+                        spawner.getPlacedBy() == null ? null : spawner.getPlacedBy().getUniqueId().toString());
+                statement.setInt(3, spawner.getId());
+                statement.executeUpdate();
+            }
+        });
     }
 
     public void updateSpawnerStack(SpawnerStack spawnerStack) {

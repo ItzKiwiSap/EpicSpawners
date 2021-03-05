@@ -163,9 +163,6 @@ public class EditorOverviewGui extends Gui {
         setButton(32, GuiUtils.createButtonItem(CompatibleMaterial.GOLD_BLOCK, TextUtils.formatText("&c&lBlock Settings")),
                 event -> guiManager.showGUI(player, new EditorEditGui(plugin, this, spawnerTier, EditorEditGui.EditType.BLOCK)));
 
-        setButton(34, GuiUtils.createButtonItem(CompatibleMaterial.FIREWORK_ROCKET, TextUtils.formatText("&b&lParticle Settings")),
-                event -> guiManager.showGUI(player, new EditorParticleGui(plugin, this, spawnerTier)));
-
         setButton(43, GuiUtils.createButtonItem(CompatibleMaterial.PAPER, TextUtils.formatText("&6&lCommand Settings")),
                 event -> guiManager.showGUI(player, new EditorEditGui(plugin, this, spawnerTier, EditorEditGui.EditType.COMMAND)));
 

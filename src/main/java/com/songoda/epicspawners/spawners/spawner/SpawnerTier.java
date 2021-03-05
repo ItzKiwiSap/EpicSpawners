@@ -8,9 +8,6 @@ import com.songoda.core.nms.NmsManager;
 import com.songoda.core.nms.nbt.NBTItem;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.epicspawners.EpicSpawners;
-import com.songoda.epicspawners.particles.ParticleDensity;
-import com.songoda.epicspawners.particles.ParticleEffect;
-import com.songoda.epicspawners.particles.ParticleType;
 import com.songoda.epicspawners.settings.Settings;
 import com.songoda.epicspawners.spawners.condition.SpawnCondition;
 import com.songoda.epicspawners.spawners.spawner.option.SpawnOption;
@@ -49,15 +46,6 @@ public class SpawnerTier {
     private CompatibleMaterial displayItem = null;
 
     private String tickRate = "800:200";
-
-    private ParticleEffect particleEffect = ParticleEffect.HALO;
-    private ParticleType spawnEffectParticle = ParticleType.REDSTONE;
-    private ParticleType entitySpawnParticle = ParticleType.SMOKE;
-    private ParticleType spawnerSpawnParticle = ParticleType.FIRE;
-
-    private ParticleDensity particleDensity = ParticleDensity.NORMAL;
-
-    private boolean particleEffectBoostedOnly = true;
 
     private List<EntityType> entities = new ArrayList<>();
     private List<CompatibleMaterial> blocks = new ArrayList<>();
@@ -272,60 +260,12 @@ public class SpawnerTier {
         this.tickRate = tickRate;
     }
 
-    public ParticleEffect getParticleEffect() {
-        return particleEffect;
-    }
-
-    public void setParticleEffect(ParticleEffect particleEffect) {
-        this.particleEffect = particleEffect;
-    }
-
-    public ParticleType getSpawnEffectParticle() {
-        return spawnEffectParticle;
-    }
-
-    public void setSpawnEffectParticle(ParticleType spawnEffectParticle) {
-        this.spawnEffectParticle = spawnEffectParticle;
-    }
-
     public void setSpawnLimit(int spawnLimit) {
         this.spawnLimit = spawnLimit;
     }
 
     public int getSpawnLimit() {
         return spawnLimit;
-    }
-
-    public ParticleType getEntitySpawnParticle() {
-        return entitySpawnParticle;
-    }
-
-    public void setEntitySpawnParticle(ParticleType entitySpawnParticle) {
-        this.entitySpawnParticle = entitySpawnParticle;
-    }
-
-    public ParticleType getSpawnerSpawnParticle() {
-        return spawnerSpawnParticle;
-    }
-
-    public void setSpawnerSpawnParticle(ParticleType spawnerSpawnParticle) {
-        this.spawnerSpawnParticle = spawnerSpawnParticle;
-    }
-
-    public ParticleDensity getParticleDensity() {
-        return particleDensity;
-    }
-
-    public void setParticleDensity(ParticleDensity particleDensity) {
-        this.particleDensity = particleDensity;
-    }
-
-    public boolean isParticleEffectBoostedOnly() {
-        return particleEffectBoostedOnly;
-    }
-
-    public void setParticleEffectBoostedOnly(boolean particleEffectBoostedOnly) {
-        this.particleEffectBoostedOnly = particleEffectBoostedOnly;
     }
 
     public void addCondition(SpawnCondition spawnCondition) {

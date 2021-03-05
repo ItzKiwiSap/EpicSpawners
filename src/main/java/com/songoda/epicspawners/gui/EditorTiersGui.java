@@ -152,7 +152,7 @@ public class EditorTiersGui extends Gui {
                                 }
                                 if (modified) {
                                     plugin.updateHologram(spawner);
-                                    plugin.getDataManager().updateSpawner(spawner);
+                                    plugin.getDataManager().updateSpawnerAsync(spawner);
                                 }
                             }
 

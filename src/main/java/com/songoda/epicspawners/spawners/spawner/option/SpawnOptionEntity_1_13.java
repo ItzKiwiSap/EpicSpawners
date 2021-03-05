@@ -6,7 +6,6 @@ import com.songoda.core.utils.EntityUtils;
 import com.songoda.epicspawners.EpicSpawners;
 import com.songoda.epicspawners.api.events.SpawnerSpawnEvent;
 import com.songoda.epicspawners.boost.types.Boosted;
-import com.songoda.epicspawners.particles.ParticleType;
 import com.songoda.epicspawners.settings.Settings;
 import com.songoda.epicspawners.spawners.condition.SpawnCondition;
 import com.songoda.epicspawners.spawners.condition.SpawnConditionNearbyEntities;
@@ -15,8 +14,8 @@ import com.songoda.epicspawners.spawners.spawner.SpawnerStack;
 import com.songoda.epicspawners.spawners.spawner.SpawnerTier;
 import com.songoda.epicspawners.utils.PaperUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -190,40 +189,16 @@ public class SpawnOptionEntity_1_13 implements SpawnOption {
         location.add(.5, .5, .5);
         if (location.getWorld() == null) return;
 
-        String[] randomLowHigh = Settings.RANDOM_LOW_HIGH.getString().split(":");
+        Chunk chunk = location.getChunk();
+        if(Arrays.stream(chunk.getEntities()).filter(e -> e instanceof LivingEntity && e.getType() != EntityType.PLAYER && e.getType() != EntityType.ARMOR_STAND && e.isValid()).count() >= 10) {
+            return;
+        }
 
         // Get the amount of entities to spawn per spawner in the stack.
         int spawnCount = 0;
         for (int i = 0; i < stack.getStackSize(); i++) {
-            int randomAmt = ThreadLocalRandom.current().nextInt(Integer.parseInt(randomLowHigh[0]), Integer.parseInt(randomLowHigh[1]));
-
-            String equation = Settings.SPAWNER_SPAWN_EQUATION.getString();
-            equation = equation.replace("{RAND}", Integer.toString(randomAmt));
-            equation = equation.replace("{STACK_SIZE}", Integer.toString(stack.getStackSize()));
-            try {
-                if (!cache.containsKey(equation)) {
-                    spawnCount += (int) Math.round(Double.parseDouble(engine.eval(equation).toString()));
-                    cache.put(equation, spawnCount);
-                } else {
-                    spawnCount += cache.get(equation);
-                }
-            } catch (ScriptException e) {
-                System.out.println("Your spawner equation is broken, fix it.");
-            }
+            spawnCount += new Random(1).nextInt(3);
         }
-
-        // Get the max entities allowed around a spawner.
-        int maxEntitiesAllowed = 0;
-        for (SpawnCondition spawnCondition : data.getConditions()) {
-            if (spawnCondition instanceof SpawnConditionNearbyEntities)
-                maxEntitiesAllowed = ((SpawnConditionNearbyEntities) spawnCondition).getMax();
-        }
-
-        // Get the amount of entities around the spawner.
-        int size = SpawnConditionNearbyEntities.getEntitiesAroundSpawner(location, true);
-
-        // Calculate the amount of entities to spawn.
-        spawnCount = Math.min(maxEntitiesAllowed - size, spawnCount) + spawner.getBoosts().stream().mapToInt(Boosted::getAmountBoosted).sum();
 
         // Check to make sure we're not spawning a stack smaller than the minimum stack size.
         boolean useUltimateStacker = this.useUltimateStacker && com.songoda.ultimatestacker.settings
@@ -237,11 +212,7 @@ public class SpawnOptionEntity_1_13 implements SpawnOption {
             EntityType type = types[ThreadLocalRandom.current().nextInt(types.length)];
             Entity entity = spawnEntity(type, spawner, data);
             if (entity != null) {
-                // If we're using UltimateStacker and this entity is indeed stackable then spawn a single stack with the desired stack size.
-                if (useUltimateStacker && com.songoda.ultimatestacker.UltimateStacker.getInstance().getMobFile().getBoolean("Mobs." + entity.getType().name() + ".Enabled"))
-                    com.songoda.ultimatestacker.UltimateStacker.getInstance().getEntityStackManager().addStack((LivingEntity) entity, spawnCount);
                 spawner.setSpawnCount(spawner.getSpawnCount() + (useUltimateStacker ? spawnCount : 1));
-                EpicSpawners.getInstance().getDataManager().updateSpawner(spawner);
             }
         }
     }
@@ -305,15 +276,6 @@ public class SpawnOptionEntity_1_13 implements SpawnOption {
                 if (event.isCancelled()) {
                     craftEntity.remove();
                     return null;
-                }
-
-                ParticleType particleType = tier.getEntitySpawnParticle();
-
-                if (particleType != ParticleType.NONE) {
-                    float xx = (float) (0 + (Math.random() * 1));
-                    float yy = (float) (0 + (Math.random() * 2));
-                    float zz = (float) (0 + (Math.random() * 1));
-                    spot.getWorld().spawnParticle(Particle.valueOf(particleType.getEffect()), spot, 5, xx, yy, zz, 0);
                 }
 
                 if (methodChunkRegionLoaderA != null) {

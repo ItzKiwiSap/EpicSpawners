@@ -1,9 +1,6 @@
 package com.songoda.epicspawners.utils;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.epicspawners.particles.ParticleDensity;
-import com.songoda.epicspawners.particles.ParticleEffect;
-import com.songoda.epicspawners.particles.ParticleType;
 import com.songoda.epicspawners.spawners.spawner.SpawnerData;
 import com.songoda.epicspawners.spawners.spawner.SpawnerTier;
 import org.bukkit.entity.EntityType;
@@ -83,40 +80,6 @@ public final class SpawnerTierBuilder {
 
     public SpawnerTierBuilder setTickRate(String tickRate) {
         this.spawnerTier.setTickRate(tickRate);
-        return this;
-    }
-
-    public SpawnerTierBuilder setParticleEffect(ParticleEffect particle) {
-        this.spawnerTier.setParticleEffect(particle);
-        return this;
-    }
-
-
-    public SpawnerTierBuilder setSpawnEffectParticle(ParticleType particle) {
-        this.spawnerTier.setSpawnEffectParticle(particle);
-        return this;
-    }
-
-
-    public SpawnerTierBuilder setEntitySpawnParticle(ParticleType particle) {
-        this.spawnerTier.setEntitySpawnParticle(particle);
-        return this;
-    }
-
-
-    public SpawnerTierBuilder setSpawnerSpawnParticle(ParticleType particle) {
-        this.spawnerTier.setSpawnerSpawnParticle(particle);
-        return this;
-    }
-
-
-    public SpawnerTierBuilder setParticleDensity(ParticleDensity density) {
-        this.spawnerTier.setParticleDensity(density);
-        return this;
-    }
-
-    public SpawnerTierBuilder setParticleEffectBoostedOnly(boolean boostedOnly) {
-        this.spawnerTier.setParticleEffectBoostedOnly(boostedOnly);
         return this;
     }
 

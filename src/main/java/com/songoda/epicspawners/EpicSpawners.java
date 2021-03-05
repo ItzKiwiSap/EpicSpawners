@@ -41,7 +41,6 @@ import com.songoda.epicspawners.spawners.spawner.PlacedSpawner;
 import com.songoda.epicspawners.spawners.spawner.SpawnerData;
 import com.songoda.epicspawners.spawners.spawner.SpawnerManager;
 import com.songoda.epicspawners.tasks.AppearanceTask;
-import com.songoda.epicspawners.tasks.SpawnerParticleTask;
 import com.songoda.epicspawners.tasks.SpawnerSpawnTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -72,7 +71,6 @@ public class EpicSpawners extends SongodaPlugin {
     private BlacklistHandler blacklistHandler;
 
     private AppearanceTask appearanceTask;
-    private SpawnerParticleTask particleTask;
     private SpawnerSpawnTask spawnerCustomSpawnTask;
 
     private DatabaseConnector databaseConnector;
@@ -90,9 +88,10 @@ public class EpicSpawners extends SongodaPlugin {
 
     @Override
     public void onPluginDisable() {
+        for(PlacedSpawner spawner : this.spawnerManager.getSpawners()) this.dataManager.updateSpawnerSync(spawner);
+
         if (!spawnerManager.wasConfigModified())
             this.saveToFile();
-        this.particleTask.cancel();
         this.spawnerCustomSpawnTask.cancel();
         this.databaseConnector.closeConnection();
         HologramManager.removeAllHolograms();
@@ -158,7 +157,6 @@ public class EpicSpawners extends SongodaPlugin {
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::saveToFile, timeout, timeout);
 
         // Start tasks
-        this.particleTask = SpawnerParticleTask.startTask(this);
         this.spawnerCustomSpawnTask = SpawnerSpawnTask.startTask(this);
         this.appearanceTask = AppearanceTask.startTask(this);
 

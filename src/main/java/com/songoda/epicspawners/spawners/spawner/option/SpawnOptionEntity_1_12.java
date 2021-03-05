@@ -1,13 +1,11 @@
 package com.songoda.epicspawners.spawners.spawner.option;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.CompatibleParticleHandler;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.utils.EntityUtils;
 import com.songoda.epicspawners.EpicSpawners;
 import com.songoda.epicspawners.api.events.SpawnerSpawnEvent;
 import com.songoda.epicspawners.boost.types.Boosted;
-import com.songoda.epicspawners.particles.ParticleType;
 import com.songoda.epicspawners.settings.Settings;
 import com.songoda.epicspawners.spawners.condition.SpawnCondition;
 import com.songoda.epicspawners.spawners.condition.SpawnConditionNearbyEntities;
@@ -194,7 +192,7 @@ public class SpawnOptionEntity_1_12 implements SpawnOption {
                 if (useUltimateStacker && com.songoda.ultimatestacker.UltimateStacker.getInstance().getMobFile().getBoolean("Mobs." + entity.getType().name() + ".Enabled"))
                     com.songoda.ultimatestacker.UltimateStacker.getInstance().getEntityStackManager().addStack((LivingEntity) entity, spawnCount);
                 spawner.setSpawnCount(spawner.getSpawnCount() + (useUltimateStacker ? spawnCount : 1));
-                EpicSpawners.getInstance().getDataManager().updateSpawner(spawner);
+                EpicSpawners.getInstance().getDataManager().updateSpawnerAsync(spawner);
             }
         }
     }
@@ -245,16 +243,6 @@ public class SpawnOptionEntity_1_12 implements SpawnOption {
                 Object objDamageScaler = methodGetDamageScaler.invoke(objWorld, objBlockPosition);
 
                 methodEntityInsentientPrepare.invoke(objEntity, objDamageScaler, null);
-
-                ParticleType particleType = tier.getEntitySpawnParticle();
-
-                if (particleType != ParticleType.NONE) {
-                    float xx = (float) (0 + (Math.random() * 1));
-                    float yy = (float) (0 + (Math.random() * 2));
-                    float zz = (float) (0 + (Math.random() * 1));
-                    CompatibleParticleHandler.spawnParticles(CompatibleParticleHandler.ParticleType.getParticle(particleType.getEffect()),
-                            spot, 5, xx, yy, zz, 0);
-                }
 
                 Entity craftEntity = (Entity) methodEntityGetBukkitEntity.invoke(objEntity);
 

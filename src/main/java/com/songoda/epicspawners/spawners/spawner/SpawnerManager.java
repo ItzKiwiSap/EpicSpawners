@@ -6,9 +6,6 @@ import com.songoda.core.configuration.Config;
 import com.songoda.core.nms.NmsManager;
 import com.songoda.core.nms.nbt.NBTItem;
 import com.songoda.epicspawners.EpicSpawners;
-import com.songoda.epicspawners.particles.ParticleDensity;
-import com.songoda.epicspawners.particles.ParticleEffect;
-import com.songoda.epicspawners.particles.ParticleType;
 import com.songoda.epicspawners.spawners.condition.SpawnCondition;
 import com.songoda.epicspawners.spawners.condition.SpawnConditionBiome;
 import com.songoda.epicspawners.spawners.condition.SpawnConditionHeight;
@@ -221,12 +218,6 @@ public class SpawnerManager {
                 .setCostEconomy(10)
                 .setCostLevels(2)
                 .setTickRate("800:200")
-                .setParticleEffect(ParticleEffect.valueOf("HALO"))
-                .setSpawnEffectParticle(ParticleType.valueOf("REDSTONE"))
-                .setEntitySpawnParticle(ParticleType.valueOf("SMOKE"))
-                .setSpawnerSpawnParticle(ParticleType.valueOf("FIRE"))
-                .setParticleDensity(ParticleDensity.valueOf("NORMAL"))
-                .setParticleEffectBoostedOnly(true)
                 .setSpawnLimit(-1)
                 .setDisplayName(WordUtils.capitalizeFully(typeString.replace("_", " ")))
                 .displayItem(CompatibleMaterial.AIR);
@@ -312,12 +303,6 @@ public class SpawnerManager {
                         .setCostEconomy(currentSection2.getDouble("Cost-Economy", 10))
                         .setCostLevels(currentSection2.getInt("Cost-Levels", 2))
                         .setTickRate(currentSection2.getString("Tick-Rate", "800:200"))
-                        .setParticleEffect(ParticleEffect.valueOf(currentSection2.getString("Spawn-Effect", "HALO")))
-                        .setSpawnEffectParticle(ParticleType.valueOf(currentSection2.getString("Spawn-Effect-Particle", "REDSTONE")))
-                        .setEntitySpawnParticle(ParticleType.valueOf(currentSection2.getString("Entity-Spawn-Particle", "SMOKE")))
-                        .setSpawnerSpawnParticle(ParticleType.valueOf(currentSection2.getString("Spawner-Spawn-Particle", "FIRE")))
-                        .setParticleDensity(ParticleDensity.valueOf(currentSection2.getString("Particle-Amount", "NORMAL")))
-                        .setParticleEffectBoostedOnly(currentSection2.getBoolean("Particle-Effect-Boosted-Only", true))
                         .setSpawnLimit(currentSection2.getInt("Spawn-Limit", -1))
                         .setDisplayName(currentSection2.getString("Display-Name", key))
                         .displayItem(CompatibleMaterial.valueOf(currentSection2.getString(currentSection2.contains("Display-Item") ? "Display-Item" : "AIR")));
@@ -412,13 +397,6 @@ public class SpawnerManager {
                 currentSection2.set("Tick-Rate", spawnerTier.getTickRate());
                 currentSection2.set("Pickup-Cost", spawnerTier.getPickupCost());
                 currentSection2.set("Pick-Damage", spawnerTier.getPickDamage());
-
-                currentSection2.set("Spawn-Effect", spawnerTier.getParticleEffect().name());
-                currentSection2.set("Spawn-Effect-Particle", spawnerTier.getSpawnEffectParticle().name());
-                currentSection2.set("Entity-Spawn-Particle", spawnerTier.getEntitySpawnParticle().name());
-                currentSection2.set("Spawner-Spawn-Particle", spawnerTier.getSpawnerSpawnParticle().name());
-                currentSection2.set("Particle-Amount", spawnerTier.getParticleDensity().name());
-                currentSection2.set("Particle-Effect-Boosted-Only", spawnerTier.isParticleEffectBoostedOnly());
 
                 for (SpawnCondition spawnCondition : spawnerTier.getConditions()) {
                     if (spawnCondition instanceof SpawnConditionBiome) {

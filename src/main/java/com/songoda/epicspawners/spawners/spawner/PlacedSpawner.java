@@ -2,9 +2,7 @@ package com.songoda.epicspawners.spawners.spawner;
 
 import com.songoda.core.compatibility.CompatibleHand;
 import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.CompatibleParticleHandler;
 import com.songoda.core.compatibility.CompatibleSound;
-import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.utils.PlayerUtils;
 import com.songoda.epicspawners.EpicSpawners;
 import com.songoda.epicspawners.api.events.SpawnerChangeEvent;
@@ -13,7 +11,6 @@ import com.songoda.epicspawners.boost.types.Boosted;
 import com.songoda.epicspawners.boost.types.BoostedPlayer;
 import com.songoda.epicspawners.boost.types.BoostedSpawner;
 import com.songoda.epicspawners.gui.SpawnerTiersGui;
-import com.songoda.epicspawners.particles.ParticleType;
 import com.songoda.epicspawners.settings.Settings;
 import com.songoda.epicspawners.spawners.condition.SpawnCondition;
 import org.bukkit.Bukkit;
@@ -21,7 +18,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
@@ -67,8 +63,6 @@ public class PlacedSpawner {
 
         if (getFirstStack().getCurrentTier() == null) return false;
 
-        displaySpawnParticles();
-
         if (!isRedstonePowered()) return false;
 
         for (SpawnerStack stack : getSpawnerStacks())
@@ -77,11 +71,6 @@ public class PlacedSpawner {
         //ToDo: This is bad.
         if (getFirstTier().getSpawnLimit() != -1 && spawnCount * spawnerStacks.size() > getFirstTier().getSpawnLimit()) {
             this.location.getBlock().setType(Material.AIR);
-
-            CompatibleParticleHandler.spawnParticles(CompatibleParticleHandler.ParticleType.LAVA,
-                    location.clone().add(.5, .5, .5), 5, 0, 0, 0, 5);
-            location.getWorld().playSound(location, ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)
-                    ? Sound.ENTITY_GENERIC_EXPLODE : Sound.valueOf("EXPLODE"), 10, 10);
 
             instance.getSpawnerManager().removeSpawnerFromWorld(this);
             EpicSpawners.getInstance().getDataManager().deleteSpawner(this);
@@ -94,22 +83,6 @@ public class PlacedSpawner {
         return true;
     }
 
-    private void displaySpawnParticles() {
-        Location particleLocation = location.clone();
-        particleLocation.add(.5, .5, .5);
-        for (SpawnerStack spawnerStack : spawnerStacks) {
-            SpawnerTier spawnerTier = spawnerStack.getCurrentTier();
-            ParticleType particleType = spawnerTier.getSpawnerSpawnParticle();
-            if (particleType != ParticleType.NONE) {
-                float x = (float) (0 + (Math.random() * .8));
-                float y = (float) (0 + (Math.random() * .8));
-                float z = (float) (0 + (Math.random() * .8));
-                CompatibleParticleHandler.spawnParticles(CompatibleParticleHandler.ParticleType.getParticle(particleType.getEffect()),
-                        particleLocation, 0, x, y, z, 0);
-            }
-        }
-    }
-
 
     public SpawnerStack addSpawnerStack(SpawnerStack spawnerStack) {
         this.spawnerStacks.push(spawnerStack);
@@ -120,7 +93,6 @@ public class PlacedSpawner {
     public Location getLocation() {
         return location.clone();
     }
-
 
     public int getX() {
         return location.getBlockX();
@@ -334,9 +306,6 @@ public class PlacedSpawner {
         loc.setX(loc.getX() + .5);
         loc.setY(loc.getY() + .5);
         loc.setZ(loc.getZ() + .5);
-
-        CompatibleParticleHandler.spawnParticles(CompatibleParticleHandler.ParticleType.getParticle(Settings.UPGRADE_PARTICLE_TYPE.getString()),
-                loc, 100, .5, .5, .5);
 
         plugin.updateHologram(this);
         plugin.getAppearanceTask().updateDisplayItem(this, getFirstTier());
