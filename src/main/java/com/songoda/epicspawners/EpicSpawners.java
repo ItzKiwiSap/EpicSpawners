@@ -9,10 +9,7 @@ import com.songoda.core.database.DataMigrationManager;
 import com.songoda.core.database.DatabaseConnector;
 import com.songoda.core.database.SQLiteConnector;
 import com.songoda.core.gui.GuiManager;
-import com.songoda.core.hooks.EconomyManager;
-import com.songoda.core.hooks.EntityStackerManager;
-import com.songoda.core.hooks.HologramManager;
-import com.songoda.core.hooks.ProtectionManager;
+import com.songoda.core.hooks.*;
 import com.songoda.epicspawners.blacklist.BlacklistHandler;
 import com.songoda.epicspawners.boost.BoostManager;
 import com.songoda.epicspawners.commands.CommandBoost;
@@ -110,9 +107,6 @@ public class EpicSpawners extends SongodaPlugin {
         // Setup Config
         Settings.setupConfig();
         this.setLocale(Settings.LANGUGE_MODE.getString(), false);
-
-        // Load the entity stacker manager.
-        EntityStackerManager.load();
 
         // Set Economy & Hologram preference
         EconomyManager.getManager().setPreferredHook(Settings.ECONOMY_PLUGIN.getString());

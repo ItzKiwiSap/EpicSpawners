@@ -2,6 +2,9 @@ package com.songoda.epicspawners.spawners.spawner.option;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.ServerVersion;
+import com.songoda.core.hooks.EntityStackerManager;
+import com.songoda.core.hooks.PluginHook;
+import com.songoda.core.hooks.stackers.WildStacker;
 import com.songoda.core.utils.EntityUtils;
 import com.songoda.epicspawners.EpicSpawners;
 import com.songoda.epicspawners.api.events.SpawnerSpawnEvent;
@@ -197,7 +200,7 @@ public class SpawnOptionEntity_1_13 implements SpawnOption {
         // Get the amount of entities to spawn per spawner in the stack.
         int spawnCount = 0;
         for (int i = 0; i < stack.getStackSize(); i++) {
-            spawnCount += new Random(1).nextInt(3);
+            spawnCount += ThreadLocalRandom.current().nextInt(1, 3);
         }
 
         // Check to make sure we're not spawning a stack smaller than the minimum stack size.
@@ -208,11 +211,20 @@ public class SpawnOptionEntity_1_13 implements SpawnOption {
 
         int spawnCountUsed = useUltimateStacker ? 1 : spawnCount;
 
-        while (spawnCountUsed-- > 0) {
+        if (spawnCountUsed > 0) {
+            LivingEntity livingEntity = SpawnConditionNearbyEntities.getStackEntity(spawner.getLocation().add(0.5, 0.5, 0.5));
+
+            if(livingEntity != null) {
+                EntityStackerManager.add(livingEntity, spawnCountUsed);
+                return;
+            }
+
             EntityType type = types[ThreadLocalRandom.current().nextInt(types.length)];
             Entity entity = spawnEntity(type, spawner, data);
+
             if (entity != null) {
-                spawner.setSpawnCount(spawner.getSpawnCount() + (useUltimateStacker ? spawnCount : 1));
+                EntityStackerManager.add((LivingEntity) entity, spawnCountUsed - 1);
+                spawner.setSpawnCount(spawner.getSpawnCount() + spawnCountUsed);
             }
         }
     }

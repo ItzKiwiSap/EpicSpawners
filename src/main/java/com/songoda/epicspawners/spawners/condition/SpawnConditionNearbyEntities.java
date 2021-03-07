@@ -1,15 +1,15 @@
 package com.songoda.epicspawners.spawners.condition;
 
-import com.songoda.core.hooks.EntityStackerManager;
 import com.songoda.epicspawners.EpicSpawners;
 import com.songoda.epicspawners.settings.Settings;
 import com.songoda.epicspawners.spawners.spawner.PlacedSpawner;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SpawnConditionNearbyEntities implements SpawnCondition {
 
@@ -47,12 +47,23 @@ public class SpawnConditionNearbyEntities implements SpawnCondition {
 
         int amt = location.getWorld().getNearbyEntities(location, Integer.parseInt(arr[0]), Integer.parseInt(arr[1]), Integer.parseInt(arr[2]))
                 .stream().filter(e -> e instanceof LivingEntity && e.getType() != EntityType.PLAYER && e.getType() != EntityType.ARMOR_STAND && e.isValid())
-                .mapToInt(e -> {
-                    if (EntityStackerManager.getStacker() == null) return 1;
-                    return EntityStackerManager.getStacker().getSize((LivingEntity) e);
-                }).sum();
+                .mapToInt(e -> 1).sum();
         cachedAmounts.put(location, amt);
         return amt;
+    }
+
+    public static List<LivingEntity> getEntitiesAroundSpawner(Location location) {
+        String[] arr = Settings.SEARCH_RADIUS.getString().split("x");
+
+        return location.getWorld().getNearbyEntities(location, Integer.parseInt(arr[0]), Integer.parseInt(arr[1]), Integer.parseInt(arr[2]))
+                .stream().filter(e -> e instanceof LivingEntity && e.getType() != EntityType.PLAYER && e.getType() != EntityType.ARMOR_STAND && e.isValid())
+                .map(e -> (LivingEntity) e)
+                .collect(Collectors.toList());
+    }
+
+    public static LivingEntity getStackEntity(Location location) {
+        List<LivingEntity> entities = getEntitiesAroundSpawner(location);
+        return entities.stream().min(Comparator.comparing((e) -> e.getLocation().distance(location))).orElse(null);
     }
 
     public int getMax() {
