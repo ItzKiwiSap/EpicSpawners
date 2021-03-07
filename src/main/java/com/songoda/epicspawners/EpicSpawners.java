@@ -9,18 +9,14 @@ import com.songoda.core.database.DataMigrationManager;
 import com.songoda.core.database.DatabaseConnector;
 import com.songoda.core.database.SQLiteConnector;
 import com.songoda.core.gui.GuiManager;
+import com.songoda.core.gui.GuiUtils;
 import com.songoda.core.hooks.*;
 import com.songoda.epicspawners.blacklist.BlacklistHandler;
-import com.songoda.epicspawners.boost.BoostManager;
-import com.songoda.epicspawners.commands.CommandBoost;
 import com.songoda.epicspawners.commands.CommandChange;
-import com.songoda.epicspawners.commands.CommandEditor;
 import com.songoda.epicspawners.commands.CommandGive;
 import com.songoda.epicspawners.commands.CommandReload;
 import com.songoda.epicspawners.commands.CommandSettings;
 import com.songoda.epicspawners.commands.CommandSpawn;
-import com.songoda.epicspawners.commands.CommandSpawnerShop;
-import com.songoda.epicspawners.commands.CommandSpawnerStats;
 import com.songoda.epicspawners.database.DataManager;
 import com.songoda.epicspawners.database.migrations._1_InitialMigration;
 import com.songoda.epicspawners.database.migrations._2_AddTiers;
@@ -61,7 +57,6 @@ public class EpicSpawners extends SongodaPlugin {
     private SpawnManager spawnManager;
     private PlayerDataManager playerActionManager;
     private SpawnerManager spawnerManager;
-    private BoostManager boostManager;
     private CommandManager commandManager;
     private LootablesManager lootablesManager;
 
@@ -118,17 +113,12 @@ public class EpicSpawners extends SongodaPlugin {
         this.commandManager.addMainCommand("es")
                 .addSubCommands(
                         new CommandGive(this),
-                        new CommandBoost(this),
-                        new CommandEditor(this),
                         new CommandSettings(this),
                         new CommandReload(this),
                         new CommandChange(this),
                         new CommandSpawn(this)
                 );
-        this.commandManager.addCommand(new CommandSpawnerStats(this));
-        this.commandManager.addCommand(new CommandSpawnerShop(this));
 
-        this.boostManager = new BoostManager();
         this.spawnManager = new SpawnManager();
         this.spawnerManager = new SpawnerManager(this);
         this.blacklistHandler = new BlacklistHandler();
@@ -183,7 +173,6 @@ public class EpicSpawners extends SongodaPlugin {
             this.dataManager.getSpawners((spawners) -> {
                 this.spawnerManager.addSpawners(spawners);
                 loadHolograms();
-                this.dataManager.getBoosts((boosts) -> this.boostManager.addBoosts(boosts));
                 this.dataManager.getEntityKills((kills) -> {
                     for (Map.Entry<UUID, Map<EntityType, Integer>> entry : kills.entrySet()) {
                         PlayerData playerData = this.playerActionManager.getPlayerData(entry.getKey());
@@ -316,10 +305,6 @@ public class EpicSpawners extends SongodaPlugin {
         return commandManager;
     }
 
-    public BoostManager getBoostManager() {
-        return boostManager;
-    }
-
     public PlayerDataManager getPlayerDataManager() {
         return playerActionManager;
     }
@@ -351,4 +336,5 @@ public class EpicSpawners extends SongodaPlugin {
     public LootablesManager getLootablesManager() {
         return lootablesManager;
     }
+
 }

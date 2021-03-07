@@ -2,7 +2,6 @@ package com.songoda.epicspawners.spawners.spawner.option;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.epicspawners.EpicSpawners;
-import com.songoda.epicspawners.boost.types.Boosted;
 import com.songoda.epicspawners.spawners.spawner.PlacedSpawner;
 import com.songoda.epicspawners.spawners.spawner.SpawnerStack;
 import com.songoda.epicspawners.spawners.spawner.SpawnerTier;
@@ -36,8 +35,7 @@ public class SpawnOptionBlock implements SpawnOption {
         Location location = spawner.getLocation();
         if (location == null || location.getWorld() == null) return;
 
-        int spawnerBoost = spawner.getBoosts().stream().mapToInt(Boosted::getAmountBoosted).sum();
-        for (int i = 0; i < stack.getStackSize() + spawnerBoost; i++) {
+        for (int i = 0; i < stack.getStackSize(); i++) {
             for (CompatibleMaterial material : blocks) {
                 int searchIndex = 0;
                 while (searchIndex++ <= MAX_SEARCH_COUNT) {

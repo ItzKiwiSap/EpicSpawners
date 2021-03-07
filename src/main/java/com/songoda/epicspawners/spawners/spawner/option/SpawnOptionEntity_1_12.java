@@ -5,7 +5,6 @@ import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.utils.EntityUtils;
 import com.songoda.epicspawners.EpicSpawners;
 import com.songoda.epicspawners.api.events.SpawnerSpawnEvent;
-import com.songoda.epicspawners.boost.types.Boosted;
 import com.songoda.epicspawners.settings.Settings;
 import com.songoda.epicspawners.spawners.condition.SpawnCondition;
 import com.songoda.epicspawners.spawners.condition.SpawnConditionNearbyEntities;
@@ -174,7 +173,7 @@ public class SpawnOptionEntity_1_12 implements SpawnOption {
         int size = SpawnConditionNearbyEntities.getEntitiesAroundSpawner(location, true);
 
         // Calculate the amount of entities to spawn.
-        spawnCount = Math.min(maxEntitiesAllowed - size, spawnCount) + spawner.getBoosts().stream().mapToInt(Boosted::getAmountBoosted).sum();
+        spawnCount = Math.min(maxEntitiesAllowed - size, spawnCount);
 
         // Check to make sure we're not spawning a stack smaller than the minimum stack size.
         boolean useUltimateStacker = this.useUltimateStacker && com.songoda.ultimatestacker.settings

@@ -1,7 +1,6 @@
 package com.songoda.epicspawners.spawners.spawner.option;
 
 import com.songoda.epicspawners.EpicSpawners;
-import com.songoda.epicspawners.boost.types.Boosted;
 import com.songoda.epicspawners.spawners.spawner.PlacedSpawner;
 import com.songoda.epicspawners.spawners.spawner.SpawnerStack;
 import com.songoda.epicspawners.spawners.spawner.SpawnerTier;
@@ -38,9 +37,8 @@ public class SpawnOptionCommand implements SpawnOption {
         Location location = spawner.getLocation();
         if (location == null || location.getWorld() == null) return;
 
-        int spawnerBoost = spawner.getBoosts().stream().mapToInt(Boosted::getAmountBoosted).sum();
 
-        for (int i = 0; i < stack.getStackSize() + spawnerBoost; i++) {
+        for (int i = 0; i < stack.getStackSize(); i++) {
             for (String command : commands) {
                 String finalCommand = command;
                 String lowercaseCommand = finalCommand.toLowerCase();

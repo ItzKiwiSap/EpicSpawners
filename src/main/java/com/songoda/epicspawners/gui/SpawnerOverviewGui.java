@@ -2,6 +2,7 @@ package com.songoda.epicspawners.gui;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.gui.CustomizableGui;
+import com.songoda.core.gui.GuiUtils;
 import com.songoda.core.hooks.EconomyManager;
 import com.songoda.core.utils.NumberUtils;
 import com.songoda.core.utils.TextUtils;
@@ -13,7 +14,6 @@ import com.songoda.epicspawners.spawners.spawner.SpawnerData;
 import com.songoda.epicspawners.spawners.spawner.SpawnerStack;
 import com.songoda.epicspawners.spawners.spawner.SpawnerTier;
 import com.songoda.epicspawners.utils.CostType;
-import com.songoda.epicspawners.utils.GuiUtils;
 import com.songoda.epicspawners.utils.HeadUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -175,15 +175,6 @@ public class SpawnerOverviewGui extends CustomizableGui {
         itemECO.setItemMeta(itemmetaECO);
 
         setItem("spawner",13, spawnerItem);
-
-        if (player.hasPermission("epicspawners.convert") && data.isConvertible()) {
-            setButton("convert", 4, GuiUtils.createButtonItem(Settings.CONVERT_ICON.getMaterial(),
-                    plugin.getLocale().getMessage("interface.spawner.convert").getMessage()),
-                    (event) -> guiManager.showGUI(player, new SpawnerConvertGui(plugin, stack, player)));
-        }
-
-        if (spawner.getSpawnerStacks().size() == 1)
-            GuiUtils.applyBoosted(22, this, plugin, player, spawner);
 
         if (Settings.DISPLAY_HELP_BUTTON.getBoolean()) {
             ItemStack itemO = new ItemStack(Material.PAPER, 1);

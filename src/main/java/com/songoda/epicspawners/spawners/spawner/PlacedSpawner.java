@@ -7,9 +7,6 @@ import com.songoda.core.utils.PlayerUtils;
 import com.songoda.epicspawners.EpicSpawners;
 import com.songoda.epicspawners.api.events.SpawnerChangeEvent;
 import com.songoda.epicspawners.api.events.SpawnerDropEvent;
-import com.songoda.epicspawners.boost.types.Boosted;
-import com.songoda.epicspawners.boost.types.BoostedPlayer;
-import com.songoda.epicspawners.boost.types.BoostedSpawner;
 import com.songoda.epicspawners.gui.SpawnerTiersGui;
 import com.songoda.epicspawners.settings.Settings;
 import com.songoda.epicspawners.spawners.condition.SpawnCondition;
@@ -322,29 +319,6 @@ public class PlacedSpawner {
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> player.playSound(player.getLocation(), CompatibleSound.BLOCK_NOTE_BLOCK_CHIME.getSound(), 1.2F, 35.0F), 5L);
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> player.playSound(player.getLocation(), CompatibleSound.BLOCK_NOTE_BLOCK_CHIME.getSound(), 1.8F, 35.0F), 10L);
         }
-    }
-
-    public List<Boosted> getBoosts() {
-        EpicSpawners instance = EpicSpawners.getInstance();
-        Set<Boosted> boosts = instance.getBoostManager().getBoosts();
-
-        List<Boosted> found = new ArrayList<>();
-        for (Boosted boost : new ArrayList<>(boosts)) {
-            if (boost instanceof BoostedPlayer && placedBy == null) continue;
-            if (System.currentTimeMillis() >= boost.getEndTime()) {
-                instance.getBoostManager().removeBoost(boost);
-                instance.getDataManager().deleteBoost(boost);
-                continue;
-            }
-
-            if (boost instanceof BoostedSpawner) {
-                if (!location.equals(((BoostedSpawner) boost).getLocation())) continue;
-            } else if (boost instanceof BoostedPlayer) {
-                if (!placedBy.equals(((BoostedPlayer) boost).getPlayer().getUniqueId())) continue;
-            }
-            found.add(boost);
-        }
-        return found;
     }
 
     public int updateDelay() {

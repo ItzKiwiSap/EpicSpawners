@@ -11,11 +11,3 @@ commands:
     default: true
     aliases: [EpicSpawners]
     usage: /<command> [reload]
-  SpawnerStats:
-    description: I have no idea.
-    default: false
-    usage: /<command> [reload]
-  SpawnerShop:
-    description: I have no idea.
-    default: false
-    usage: /<command> [reload]

@@ -4,9 +4,6 @@ import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.database.DataManagerAbstract;
 import com.songoda.core.database.DatabaseConnector;
 import com.songoda.epicspawners.EpicSpawners;
-import com.songoda.epicspawners.boost.types.Boosted;
-import com.songoda.epicspawners.boost.types.BoostedPlayer;
-import com.songoda.epicspawners.boost.types.BoostedSpawner;
 import com.songoda.epicspawners.spawners.spawner.PlacedSpawner;
 import com.songoda.epicspawners.spawners.spawner.SpawnerData;
 import com.songoda.epicspawners.spawners.spawner.SpawnerStack;
@@ -139,33 +136,6 @@ public class DataManager extends DataManagerAbstract {
         }));
     }
 
-    public void createBoost(Boosted boosted) {
-        this.async(() -> this.databaseConnector.connect(connection -> {
-            if (boosted instanceof BoostedPlayer) {
-                BoostedPlayer boostedPlayer = (BoostedPlayer) boosted;
-                String createBoostedPlayer = "INSERT INTO " + this.getTablePrefix() + "boosted_players (player, amount, end_time) VALUES (?, ?, ?)";
-                try (PreparedStatement statement = connection.prepareStatement(createBoostedPlayer)) {
-                    statement.setString(1, boostedPlayer.getPlayer().getUniqueId().toString());
-                    statement.setInt(2, boostedPlayer.getAmountBoosted());
-                    statement.setLong(3, boostedPlayer.getEndTime());
-                    statement.executeUpdate();
-                }
-            } else if (boosted instanceof BoostedSpawner) {
-                BoostedSpawner boostedSpawner = (BoostedSpawner) boosted;
-                String createBoostedSpawner = "INSERT INTO " + this.getTablePrefix() + "boosted_spawners (world, x, y, z, amount, end_time) VALUES (?, ?, ?, ?, ?, ?)";
-                try (PreparedStatement statement = connection.prepareStatement(createBoostedSpawner)) {
-                    Location location = ((BoostedSpawner) boosted).getLocation();
-                    statement.setString(1, location.getWorld().getName());
-                    statement.setInt(2, Math.toIntExact(Math.round(location.getX())));
-                    statement.setInt(3, Math.toIntExact(Math.round(location.getY())));
-                    statement.setInt(4, Math.toIntExact(Math.round(location.getZ())));
-                    statement.setInt(5, boostedSpawner.getAmountBoosted());
-                    statement.setLong(6, boostedSpawner.getEndTime());
-                    statement.executeUpdate();
-                }
-            }
-        }));
-    }
 
     public void createEntityKill(OfflinePlayer player, EntityType entityType, int count) {
         this.async(() -> this.databaseConnector.connect(connection -> {
@@ -203,41 +173,7 @@ public class DataManager extends DataManagerAbstract {
         }));
     }
 
-    public void getBoosts(Consumer<List<Boosted>> callback) {
-        List<Boosted> boosts = new ArrayList<>();
-        this.async(() -> this.databaseConnector.connect(connection -> {
-            try (Statement statement = connection.createStatement()) {
-                String selectBoostedPlayers = "SELECT * FROM " + this.getTablePrefix() + "boosted_players";
-                ResultSet result = statement.executeQuery(selectBoostedPlayers);
-                while (result.next()) {
-                    UUID player = UUID.fromString(result.getString("player"));
-                    int amount = result.getInt("amount");
-                    long endTime = result.getLong("end_time");
-                    boosts.add(new BoostedPlayer(player, amount, endTime));
-                }
-            }
 
-            try (Statement statement = connection.createStatement()) {
-                String selectBoostedSpawners = "SELECT * FROM " + this.getTablePrefix() + "boosted_spawners";
-                ResultSet result = statement.executeQuery(selectBoostedSpawners);
-                while (result.next()) {
-                    World world = Bukkit.getWorld(result.getString("world"));
-
-                    if (world == null)
-                        continue;
-
-                    int x = result.getInt("x");
-                    int y = result.getInt("y");
-                    int z = result.getInt("z");
-                    Location location = new Location(world, x, y, z);
-                    int amount = result.getInt("amount");
-                    long endTime = result.getLong("end_time");
-                    boosts.add(new BoostedSpawner(location, amount, endTime));
-                }
-            }
-            this.sync(() -> callback.accept(boosts));
-        }));
-    }
 
     public void getEntityKills(Consumer<Map<UUID, Map<EntityType, Integer>>> callback) {
         Map<UUID, Map<EntityType, Integer>> entityKills = new HashMap<>();
@@ -258,24 +194,6 @@ public class DataManager extends DataManagerAbstract {
                 }
             }
             this.sync(() -> callback.accept(entityKills));
-        }));
-    }
-
-    public void deleteBoost(Boosted boosted) {
-        this.async(() -> this.databaseConnector.connect(connection -> {
-            if (boosted instanceof BoostedPlayer) {
-                String deleteBoost = "DELETE FROM " + this.getTablePrefix() + "boosted_players WHERE end_time = ?";
-                try (PreparedStatement statement = connection.prepareStatement(deleteBoost)) {
-                    statement.setLong(1, boosted.getEndTime());
-                    statement.executeUpdate();
-                }
-            } else if (boosted instanceof BoostedSpawner) {
-                String deleteBoost = "DELETE FROM " + this.getTablePrefix() + "boosted_spawners WHERE end_time = ?";
-                try (PreparedStatement statement = connection.prepareStatement(deleteBoost)) {
-                    statement.setLong(1, boosted.getEndTime());
-                    statement.executeUpdate();
-                }
-            }
         }));
     }
 

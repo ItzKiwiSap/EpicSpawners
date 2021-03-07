@@ -2,6 +2,7 @@ package com.songoda.epicspawners.gui;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.gui.CustomizableGui;
+import com.songoda.core.gui.GuiUtils;
 import com.songoda.core.utils.NumberUtils;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.epicspawners.EpicSpawners;
@@ -9,7 +10,6 @@ import com.songoda.epicspawners.settings.Settings;
 import com.songoda.epicspawners.spawners.spawner.PlacedSpawner;
 import com.songoda.epicspawners.spawners.spawner.SpawnerStack;
 import com.songoda.epicspawners.spawners.spawner.SpawnerTier;
-import com.songoda.epicspawners.utils.GuiUtils;
 import com.songoda.epicspawners.utils.HeadUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -83,7 +83,6 @@ public class SpawnerTiersGui extends CustomizableGui {
             }
         }
 
-        GuiUtils.applyBoosted(5, this, plugin, player, spawner);
 
         setItem("stats", 3, GuiUtils.createButtonItem(CompatibleMaterial.PAPER, plugin.getLocale().getMessage("interface.spawner.statstitle").getMessage(),
                 plugin.getLocale().getMessage("interface.spawner.stats")
